@@ -11,7 +11,7 @@ const env = process.env.NODE_ENV;
 const apiHost = get(config, `${env}.apiHost`);
 const socket = io(apiHost, {forceNew: true});
 const mockFeel = {
-    fps: 500,
+    duration: 500,
     reverse: true,
     repeat: true,
     frames: [{
@@ -165,7 +165,7 @@ class App extends Component {
 
     onFeel = async data => {
         const {feel} = data;
-        const {fps = 0, frames = [], repeat = false, reverse = false} = feel;
+        const {duration = 1000, frames = [], repeat = false, reverse = false} = feel;
 
         if (frames.length === 1) {
             const [frame] = frames;
@@ -184,7 +184,7 @@ class App extends Component {
 
                     this.setState({frame});
 
-                    await sleep(fps);
+                    await sleep(duration);
                 }
 
                 if (repeat) {
