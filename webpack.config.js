@@ -43,8 +43,8 @@ module.exports = {
         hot: true,
         https: {
             ca: fs.readFileSync(('./cert/ca.pem')),
-            cert: fs.readFileSync('./localhost.pem'),
-            key: fs.readFileSync('./localhost-key.pem')
+            cert: fs.readFileSync('./cert/localhost.pem'),
+            key: fs.readFileSync('./cert/localhost-key.pem')
         },
         index: 'App',
         port: 8082,
