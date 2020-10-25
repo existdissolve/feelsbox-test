@@ -165,7 +165,7 @@ class App extends Component {
 
     onFeel = async data => {
         const {feel} = data;
-        const {duration = 1000, frames = [], repeat = false, reverse = false} = feel;
+        const {duration: defaultDuration = 1000, frames = [], repeat = false, reverse = false} = feel;
 
         if (frames.length === 1) {
             const [frame] = frames;
@@ -182,6 +182,8 @@ class App extends Component {
                         continue;
                     }
 
+                    const {duration: frameDuration} = frame;
+                    const duration = frameDuration || defaultDuration;
                     this.setState({frame});
 
                     await sleep(duration);
@@ -202,7 +204,7 @@ class App extends Component {
         const {frame} = this.state;
 
         if (frame) {
-            const {brightness, pixels = []} = frame;
+            const {brightness = 100, pixels = []} = frame;
             let position = -1;
 
             return (
@@ -214,10 +216,19 @@ class App extends Component {
                                     position++;
 
                                     const pixel = pixels.find(pix => pix.position === position);
-                                    const rawHex = get(pixel, 'color') || '000';
-                                    const rawColor = Color(`#${rawHex}`);
-                                    const [r, g, b] = rawColor.rgb().array();
-                                    const color = `rgb(${r}, ${g}, ${b}, ${brightness})`;
+                                    const rawHex = get(pixel, 'color');
+
+                                    let color;
+
+                                    if (rawHex) {
+                                        const rawColor = Color(`#${rawHex}`);
+                                        const [r, g, b] = rawColor.rgb().array();
+                                        const alpha = brightness / 100;
+
+                                        color = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+                                    } else {
+                                        color = 'rgb(0, 0, 0)';
+                                    }
 
                                     return (
                                         <div className="cell" key={colIdx} style={{background: color}}> </div>

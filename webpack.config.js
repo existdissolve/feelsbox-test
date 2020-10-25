@@ -38,6 +38,7 @@ module.exports = {
     devServer: {
         compress: true,
         contentBase: 'src',
+        disableHostCheck: true,
         historyApiFallback: true,
         host: 'feelsbox-sandbox.local',
         hot: true,
