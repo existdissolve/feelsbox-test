@@ -10,6 +10,7 @@ import config from './../config';
 const env = process.env.NODE_ENV;
 const apiHost = get(config, `${env}.apiHost`);
 const socket = io(apiHost, {forceNew: true});
+const timers = [];
 const mockFeel = {
     duration: 500,
     reverse: true,
@@ -145,7 +146,15 @@ const mockFeel = {
 
 const sleep = duration => {
     return new Promise(resolve => {
-        setTimeout(resolve, duration);
+        const timer = setTimeout(resolve, duration);
+
+        timers.push(timer);
+    });
+};
+
+const clearTimers = () => {
+    timers.forEach(timer => {
+        clearTimeout(timer);
     });
 };
 
@@ -166,6 +175,8 @@ class App extends Component {
     onFeel = async data => {
         const {feel} = data;
         const {duration: defaultDuration = 1000, frames = [], repeat = false, reverse = false} = feel;
+
+        clearTimers();
 
         if (frames.length === 1) {
             const [frame] = frames;
