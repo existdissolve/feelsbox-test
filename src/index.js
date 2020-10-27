@@ -10,6 +10,9 @@ import config from './../config';
 const env = process.env.NODE_ENV;
 const apiHost = get(config, `${env}.apiHost`);
 const socket = io(apiHost, {forceNew: true});
+// notify of connection and need for room creation
+socket.emit('joinroom', 'ZXY122');
+
 const timers = [];
 const mockFeel = {
     duration: 500,
